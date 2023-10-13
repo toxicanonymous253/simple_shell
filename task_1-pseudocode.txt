@@ -1,0 +1,12 @@
+int main(....)
+{
+	display prompt;
+	if (EOF == -1)
+	{
+		exit;
+	}
+	fork the child;
+	execute the command;
+	Handle errors;
+	return;
+}
