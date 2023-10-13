@@ -7,8 +7,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#define MAX_COMMAND_LENGTH
 
-int prompt(char *agrv[MAX_COMMAND_LENGTH]);
+extern char **environ;
+/*function prototypes*/
+
 
 #endif

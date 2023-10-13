@@ -1,3 +1,13 @@
+Requirments task1
+
+1) Display a prompt and wait for the user to type a command. A command line always ends with a new line.
+2) The prompt is displayed again each time a command has been executed.
+3) The command lines are simple, no semicolons, no pipes, no redirections or any other advanced features.
+4) The command lines are made only of one word. No arguments will be passed to programs.
+5) If an executable cannot be found, print an error message and display the prompt again.
+Handle errors.
+6) You have to handle the “end of file” condition (Ctrl+D)
+
 int main(....)
 {
 	display prompt;
@@ -10,3 +20,25 @@ int main(....)
 	Handle errors;
 	return;
 }
+
+
+Required Output:
+julien@ubuntu:~/shell$ ./shell 
+#cisfun$ ls
+./shell: No such file or directory
+#cisfun$ /bin/ls
+barbie_j       env-main.c  exec.c  fork.c  pid.c  ppid.c    prompt   prompt.c  shell.c  stat.c         wait
+env-environ.c  exec    fork    mypid   ppid   printenv  promptc  shell     stat test_scripting.sh  wait.c
+#cisfun$ /bin/ls -l
+./shell: No such file or directory
+#cisfun$ ^[[D^[[D^[[D
+./shell: No such file or directory
+#cisfun$ ^[[C^[[C^[[C^[[C
+./shell: No such file or directory
+#cisfun$ exit
+./shell: No such file or directory
+#cisfun$ ^C
+julien@ubuntu:~/shell$ echo "/bin/ls" | ./shell
+barbie_j       env-main.c  exec.c  fork.c  pid.c  ppid.c    prompt   prompt.c  shell.c  stat.c         wait
+env-environ.c  exec    fork    mypid   ppid   printenv  promptc  shell     stat test_scripting.sh  wait.c
+#cisfun$ julien@ubuntu:~/shell$

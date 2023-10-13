@@ -5,9 +5,16 @@
  * Return: 0 always when success 
  */
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv)
 {
-	int mainPrompt = prompt(argv[0]);
+	while (1)
+	{
+		/*Display a prompt*/
+		printf("$ ");
+
+		/*read command inputed*/
+		
+	}
 
 	return (0);
 }
