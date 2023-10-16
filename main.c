@@ -7,27 +7,33 @@
 
 int main(void)
 {
-	char buffer[100], *args, *token;
+	char command[100];
+	char *argv[] = {NULL, NULL};
+	int status;
 	pid_t child_pid;
-	int i = 0;
-
-	while (1)
+	while(1)
 	{
-		/*Display a prompt*/
-		printf("$ ");
+		printf("#cisfun$ ");/*Displays a prompt*/
+		fgets(command, sizeof(command), stdin);/*reading thse users input*/
 
-		/*read command inputed*/
-		fgets(buffer, sizeof(buffer), stdin);
+		command[strcspn(command, "\n")] = '\0';/*removing the new line*/
 
-		token = strtok(buffer, "\n");
+		if (strcmp(command, "exit") == 0) break;
+		child_pid = fork();
 
-		while(token != NULL)
+		if (child_pid == -1)
 		{
-			args[i] = token;/*assigning the tokenized commands*/
-			token = strtok(NULL, "\n");
-			i++;
+			perror("Error:");
+			exit(1);
 		}
+		if (child_pid == 0)
+		{
+			execve(command, argv, environ);
+			/*if execve fails*/
+			perror("./shell");
+			exit(1);
+		}
+		else wait(&status);
 	}
-
 	return (0);
 }
