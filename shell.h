@@ -10,6 +10,6 @@
 
 extern char **environ;
 /*function prototypes*/
-
+int fileExists(const char *filename);
 
 #endif

@@ -6,35 +6,61 @@
  */
 int main(void)
 {
-	char command[100];
-	char *argv[] = {NULL, NULL};
-	int status;
+	char *user_input, *args[32], *command, *command_copy, *directory, full_path[100];
+	int status,arg_count = 0;
 	pid_t child_pid;
+	command = getenv("PATH");
+	command_copy = strdup(command);
+	user_input = (char *)malloc(100 * sizeof(char));
+	if (user_input == NULL)
+	{
+		perror("malloc");
+		exit(1);
+	}
 
 	while (1)
 	{
 		printf("#cisfun$ ");/*Displays a prompt*/
-		fgets(command, sizeof(command), stdin);/*reading thse users input*/
+		fgets(user_input, sizeof(user_input), stdin);/*reading thse users input*/
 
-		command[strcspn(command, "\n")] = '\0';/*removing the new line*/
+		user_input[strcspn(user_input, "\n")] = '\0';/*removing the new line*/
+		command = strtok(user_input, " ");
 
+		if (command == NULL)
+			continue;
 		if (strcmp(command, "exit") == 0)
+		{
+			free(user_input);
 			break;
-		child_pid = fork();
-
-		if (child_pid == -1)
-		{
-			perror("Error:");
-			exit(1);
 		}
-		if (child_pid == 0)
+		directory = strtok(command_copy, ":");
+		while (directory != NULL)
 		{
-			execve(command, argv, environ);
-			perror("./shell");/*if execve fails*/
-			exit(1);
+			sprintf(full_path, "%s/%s", directory, command);
+			if (fileExists(full_path))/*Checkin if executable exists*/
+			{
+				child_pid = fork();
+				
+				if (child_pid == -1)
+				{
+					perror("fork");
+					exit(1);
+				}
+				if (child_pid == 0)
+				{
+					args[arg_count] = command;
+					while ((args[arg_count] = strtok(NULL, " ")) != NULL)
+						arg_count++;
+					execve(full_path, args, environ);
+					perror("execve");
+					exit(1);
+				}
+				else
+					wait(&status);
+			}
+			directory = strtok(NULL, ":");
 		}
-		else
-			wait(&status);
 	}
+	free(command_copy);
 	return (0);
 }
