@@ -1,39 +1,50 @@
-#include "shell.h"
+#include "shellme.h"
 
 /**
- * main - checks all the code
- * Return: 0 always when success
- */
-int main(void)
+* main - Entry point
+* @ac: ac
+* @arg: array
+* Return: 0
+*/
+
+int main(int ac __attribute__((unused)), char **arg  __attribute__((unused)))
 {
-	char buffer[100];
-	pid_t child_pid;
-	int status;
+char **args = NULL;
+char *input_s = NULL;
+int ac_s = 1;
+int exit_s = 0;
 
-	while (1)
-	{
-		/*Display a prompt*/
-		printf("#cisfun$ ");
-		fgets(buffer, sizeof(buffer), stdin);/*store stdin in buffer*/
-		if (feof(stdin))
-			break;
-		buffer[strcspn(buffer, "\n")] = '\0';/*Removing the \n from the command*/
-		child_pid = fork();/*starting child process*/
-		if (child_pid == -1)/*failed child process*/
-		{
-			perror("Error:");
-			exit(1);
-		}
-		if (child_pid == 0)/*successfull child process*/
-		{
-			char *args[] = {buffer, NULL};
 
-			execve(buffer, args, environ);
-			perror("./shell");/*If execeve fails*/
-			exit(1);
-		}
-		else
-			wait(&status);/*Wait for child to exit*/
-	}
-	return (0);
+ssize_t nil = 0;
+size_t si_se = 0;
+
+while (ac_s && nil != EOF)
+{
+si_se = 0;
+ac_s = isatty(STDIN_FILENO);
+
+if (ac_s)
+write(STDOUT_FILENO, "", 0);
+
+signal(SIGINT, signal_handler);
+nil = getline(&input_s, &si_se, stdin);
+if (nil == -1)
+{
+free(input_s);
+break;
+}
+if (space_validation(input_s))
+{
+free(input_s);
+continue;
+}
+args = _tonken(input_s);
+if (*args[0] == '\0')
+continue;
+ac_s = _exe(args, input_s, arg, &exit_s);
+free(input_s);
+free(args);
+}
+
+return (0);
 }
