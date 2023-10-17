@@ -6,6 +6,25 @@
  */
 int main(void)
 {
-	printf("Hello world\n");
+	char buffer[100];
+	pid_t child_pid;
+	while (1)
+	{
+		/*Display a prompt*/
+		printf("#cisfun$ ");
+		fgets(buffer, sizeof(buffer), stdin);/*Read the input and store it in buffer*/
+		buffer[strcspn(buffer, "\n")] = '\0';/*Removing the \n from the command*/
+		child_pid = fork();/*starting child process*/
+		if (child_pid == -1)/*failed child process*/
+		{
+			perror("Error:");
+			exit(1);
+		}
+		if (child_pid == 0)/*successfull child process*/
+		{
+			char *args[] = {buffer, NULL};
+			execve();
+		}
+	}
 	return (0);
 }
